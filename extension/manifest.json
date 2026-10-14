@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "项目需求与报价助手 | ScopeQuote",
+  "short_name": "ScopeQuote",
+  "version": "1.0.0",
+  "description": "在浏览器本地整理项目需求、拆分功能并估算工时与报价。",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "action": {
+    "default_title": "打开 ScopeQuote 项目评估",
+    "default_popup": "popup.html"
+  }
+}

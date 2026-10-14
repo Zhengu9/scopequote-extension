@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ScopeQuote 项目评估</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <svg class="svg-defs" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <symbol id="i-mark" viewBox="0 0 32 32">
+        <path d="M5 7.5h13.5a8.5 8.5 0 1 1 0 17H5z" fill="none" stroke="currentColor" stroke-width="2.6"/>
+        <path d="M5 13.5h10a4 4 0 1 1 0 8H5z" fill="none" stroke="currentColor" stroke-width="2.6"/>
+        <path d="M22 9v7m-3.5-3.5h7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.8" cy="10.8" r="6.3" fill="none" stroke="currentColor" stroke-width="1.8"/>
+        <path d="m16 16 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="m14.5 5-7 7 7 7M8 12h12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="i-download" viewBox="0 0 24 24">
+        <path d="M12 3v12m-5-5 5 5 5-5M5 19h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="8" y="8" width="11" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.7"/>
+        <path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4h-9A1.5 1.5 0 0 0 4 5.5v10A1.5 1.5 0 0 0 5.5 17H8" fill="none" stroke="currentColor" stroke-width="1.7"/>
+      </symbol>
+    </svg>
+
+    <header class="topbar">
+      <div class="brand-lockup">
+        <span class="brand-mark"><svg><use href="#i-mark"/></svg></span>
+        <div>
+          <strong>ScopeQuote</strong>
+          <span>项目需求与报价助手</span>
+        </div>
+      </div>
+      <span class="local-badge"><i></i> 本地</span>
+    </header>
+
+    <main>
+      <section id="list-view" class="view">
+        <div class="list-heading">
+          <div>
+            <p class="eyebrow">WORKSPACE</p>
+            <h1>项目评估</h1>
+          </div>
+          <button id="new-record" class="button button-primary" type="button">
+            <svg aria-hidden="true"><use href="#i-plus"/></svg>
+            新建评估
+          </button>
+        </div>
+        <label class="search-field">
+          <svg aria-hidden="true"><use href="#i-search"/></svg>
+          <input id="search-records" type="search" placeholder="搜索项目名称、客户或需求" autocomplete="off">
+        </label>
+        <div class="list-meta"><span id="record-count">0 个评估</span><span>仅此浏览器可见</span></div>
+        <div id="record-list" class="record-list"></div>
+        <div id="empty-state" class="empty-state" hidden>
+          <div class="empty-mark"><svg aria-hidden="true"><use href="#i-mark"/></svg></div>
+          <h2>把模糊需求，整理成清晰范围</h2>
+          <p>新建一份评估，逐项记录功能、工时与报价假设。</p>
+          <button id="empty-new-record" class="button button-secondary" type="button">
+            <svg aria-hidden="true"><use href="#i-plus"/></svg>
+            创建第一份评估
+          </button>
+        </div>
+      </section>
+
+      <section id="editor-view" class="view" hidden>
+        <div class="editor-heading">
+          <button id="back-to-list" class="icon-button" type="button" aria-label="返回评估列表" title="返回列表">
+            <svg aria-hidden="true"><use href="#i-arrow"/></svg>
+          </button>
+          <div class="editor-title">
+            <p class="eyebrow">PROJECT ESTIMATE</p>
+            <h1 id="editor-heading-title">新建项目评估</h1>
+          </div>
+          <span id="save-state" class="save-state" role="status">草稿</span>
+        </div>
+
+        <form id="estimate-form" novalidate>
+          <section class="form-section">
+            <div class="section-heading">
+              <span class="section-index">01</span>
+              <div><h2>项目概况</h2><p>先给这次合作一个清楚的边界。</p></div>
+            </div>
+            <div class="field-grid">
+              <label class="field field-wide">
+                <span>项目名称 <b>*</b></span>
+                <input name="name" maxlength="120" placeholder="例如：客户服务门户改版" required>
+              </label>
+              <label class="field">
+                <span>项目类型</span>
+                <select name="type">
+                  <option>网站 / Web 应用</option>
+                  <option>浏览器扩展</option>
+                  <option>移动应用</option>
+                  <option>自动化 / 集成</option>
+                  <option>咨询 / 项目辅导</option>
+                  <option>其他</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>客户 / 项目代号</span>
+                <input name="client" maxlength="100" placeholder="可使用匿名代号">
+              </label>
+              <label class="field">
+                <span>小时费率</span>
+                <div class="input-with-suffix">
+                  <input name="hourlyRate" type="number" min="0" step="0.01" inputmode="decimal">
+                  <span>/ 小时</span>
+                </div>
+              </label>
+              <label class="field">
+                <span>币种</span>
+                <select name="currency">
+                  <option value="CNY">CNY · 人民币</option>
+                  <option value="USD">USD · 美元</option>
+                  <option value="EUR">EUR · 欧元</option>
+                  <option value="JPY">JPY · 日元</option>
+                  <option value="GBP">GBP · 英镑</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>风险预留</span>
+                <div class="input-with-suffix">
+                  <input name="riskPercent" type="number" min="0" max="500" step="1" inputmode="decimal">
+                  <span>%</span>
+                </div>
+              </label>
+            </div>
+          </section>
+
+          <section class="form-section">
+            <div class="section-heading">
+              <span class="section-index">02</span>
+              <div><h2>需求与来源</h2><p>粘贴内容，或从当前网页读取你选中的文字。</p></div>
+            </div>
+            <label class="field">
+              <span>项目需求</span>
+              <textarea name="requirements" rows="5" maxlength="12000" placeholder="描述目标用户、需要解决的问题、预期流程和约束条件……"></textarea>
+            </label>
+            <div class="source-tools">
+              <button id="read-selection" class="button button-quiet" type="button">读取当前网页选中文字</button>
+              <span class="privacy-note">仅在你点击时读取，不会后台扫描网页。</span>
+            </div>
+            <div class="field-grid source-grid">
+              <label class="field">
+                <span>来源网页标题</span>
+                <input name="sourceTitle" maxlength="300" placeholder="可手动填写">
+              </label>
+              <label class="field">
+                <span>来源网址</span>
+                <input name="sourceUrl" type="url" maxlength="2000" placeholder="https://">
+              </label>
+            </div>
+          </section>
+
+          <section class="form-section">
+            <div class="section-heading section-heading-between">
+              <div class="section-heading-main">
+                <span class="section-index">03</span>
+                <div><h2>功能拆分</h2><p>按可交付的功能点估算，不确定时先记下假设。</p></div>
+              </div>
+              <button id="add-feature" class="button button-quiet button-small" type="button">
+                <svg aria-hidden="true"><use href="#i-plus"/></svg>
+                添加功能
+              </button>
+            </div>
+            <div class="feature-head" aria-hidden="true">
+              <span>功能项</span><span>优先级</span><span>工时</span><span>备注 / 操作</span>
+            </div>
+            <div id="feature-list" class="feature-list"></div>
+            <p id="feature-empty" class="feature-empty">还没有功能项。添加功能后会自动汇总工时与费用。</p>
+          </section>
+
+          <section class="estimate-panel" aria-live="polite">
+            <div class="estimate-panel-heading">
+              <div><p class="eyebrow">ESTIMATE SUMMARY</p><h2>费用估算</h2></div>
+              <span class="estimate-disclaimer">辅助估算 · 需人工审核</span>
+            </div>
+            <div class="estimate-metrics">
+              <div><span>总工时</span><strong id="total-hours">0 小时</strong></div>
+              <div><span>基础费用</span><strong id="base-fee">¥0</strong></div>
+              <div><span>风险预留费用</span><strong id="risk-fee">¥0</strong></div>
+              <div class="quote-metric"><span>建议报价</span><strong id="quote-total">¥0</strong></div>
+            </div>
+            <p class="formula-note">基础费用 = 功能工时之和 × 小时费率；建议报价 = 基础费用 + 风险预留费用。实际成本与结果不作保证。</p>
+          </section>
+
+          <section class="form-section detail-section">
+            <div class="section-heading">
+              <span class="section-index">04</span>
+              <div><h2>范围说明</h2><p>把交付、边界与不确定事项写下来。</p></div>
+            </div>
+            <label class="field"><span>交付物 <small>每行一项</small></span><textarea name="deliverables" rows="3" placeholder="例如：上线网站、源代码、操作说明"></textarea></label>
+            <label class="field"><span>假设条件 <small>每行一项</small></span><textarea name="assumptions" rows="3" placeholder="例如：客户提供最终文案与品牌素材"></textarea></label>
+            <label class="field"><span>项目风险 <small>每行一项</small></span><textarea name="risks" rows="3" placeholder="例如：第三方接口稳定性尚未验证"></textarea></label>
+            <label class="field"><span>不包含的范围 <small>每行一项</small></span><textarea name="exclusions" rows="3" placeholder="例如：持续运维、第三方服务费用"></textarea></label>
+            <label class="field"><span>待确认问题 <small>每行一项</small></span><textarea name="questions" rows="3" placeholder="例如：首期需要支持哪些语言？"></textarea></label>
+          </section>
+
+          <div class="editor-actions">
+            <div class="action-group">
+              <button id="duplicate-record" class="button button-quiet" type="button">
+                <svg aria-hidden="true"><use href="#i-copy"/></svg>
+                复制评估
+              </button>
+              <button id="delete-record" class="button button-danger" type="button">删除</button>
+            </div>
+            <div class="action-group">
+              <button id="export-markdown" class="button button-secondary" type="button">
+                <svg aria-hidden="true"><use href="#i-download"/></svg>
+                导出 Markdown
+              </button>
+              <button id="save-record" class="button button-primary" type="button">保存评估</button>
+            </div>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <footer class="app-footer"><span>ScopeQuote 1.0</span><span>数据保存在此浏览器</span></footer>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>
